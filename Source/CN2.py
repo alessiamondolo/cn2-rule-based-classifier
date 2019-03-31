@@ -38,7 +38,8 @@ class CN2:
                 self.remove_examples(covered_examples)
                 rule_list.append((best_cpx, most_common_class))
             else:
-                # TODO: add the last rule to cover the most common class of the remained examples
+                if len(self._E) > 0:
+                    rule_list.append((None, self.get_most_common_class(self._E)))
                 break
 
         return rule_list
@@ -202,13 +203,16 @@ class CN2:
         rule_string = ''
         for rule in rules:
             complex = rule[0]
-            complex_class = rule[1]
-            for idx in range(len(complex)):
-                if idx == 0:
-                    rule_string += 'If '
-                rule_string += str(complex[idx][0]) + '=' + str(complex[idx][1])
-                if idx < len(complex)-1:
-                    rule_string += ' and '
-            rule_string += ', then class=' + complex_class
+            if complex is not None:
+                complex_class = rule[1]
+                for idx in range(len(complex)):
+                    if idx == 0:
+                        rule_string += 'If '
+                    rule_string += str(complex[idx][0]) + '=' + str(complex[idx][1])
+                    if idx < len(complex)-1:
+                        rule_string += ' and '
+                rule_string += ', then class=' + complex_class
+            else:
+                rule_string += 'class=' + complex_class
             print(rule_string)
             rule_string = ''
