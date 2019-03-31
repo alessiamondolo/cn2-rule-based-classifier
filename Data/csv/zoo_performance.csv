@@ -1,0 +1,15 @@
+,rule,predicted class,covered examples,correct predictions,wrong predictions,rule accuracy
+0,"([('feathers', True)], 'bird')",bird,6,6,0,1.0
+1,"([('milk', True)], 'mammal')",mammal,5,5,0,1.0
+2,"([('hair', True)], 'insect')",insect,6,1,5,0.16666666666666666
+3,"([('airborne', True)], 'insect')",insect,8,1,7,0.125
+4,"([('fins', True)], 'fish')",fish,3,3,0,1.0
+5,"([('legs', 5)], 'invertebrate')",invertebrate,1,1,0,1.0
+6,"([('legs', 8)], 'invertebrate')",invertebrate,0,0,0,
+7,"([('eggs', False)], 'reptile')",reptile,6,1,5,0.16666666666666666
+8,"([('breathes', False)], 'invertebrate')",invertebrate,5,1,4,0.2
+9,"([('aquatic', True)], 'amphibian')",amphibian,9,1,8,0.1111111111111111
+10,"([('predator', True)], 'reptile')",reptile,10,3,7,0.3
+11,"([('backbone', True)], 'reptile')",reptile,19,4,15,0.21052631578947367
+12,"([('legs', 0)], 'invertebrate')",invertebrate,8,3,5,0.375
+13,"([('hair', False)], 'insect')",insect,18,1,17,0.05555555555555555

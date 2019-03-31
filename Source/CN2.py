@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import collections
-from scipy import stats
+from sklearn.metrics import accuracy_score
 
 
 # TODO: check copy of list insted of passing by reference
@@ -33,7 +33,7 @@ class CN2:
             best_cpx = self.find_best_complex()
             print('New best complex: ' + str(best_cpx))
             if best_cpx is not None:
-                covered_examples = self.get_covered_examples(best_cpx)
+                covered_examples = self.get_covered_examples(self._E, best_cpx)
                 most_common_class = self.get_most_common_class(covered_examples)
                 self.remove_examples(covered_examples)
                 rule_list.append((best_cpx, most_common_class))
@@ -44,9 +44,46 @@ class CN2:
 
         return rule_list
 
-    def predict(self, csv_test, rule_list):
+    def predict(self, test_file_name, rule_list):
         # TODO: create function to predict the labels based on the previously created rule set
-        return
+        test_data = pd.read_csv(self._dataPath + test_file_name)
+        test_classes = test_data.iloc[:, -1].values
+        test_data = test_data.iloc[:, :-1]
+        predicted_classes = [None] * len(test_classes)
+        #predicted_classes = pd.DataFrame().reindex_like(test_classes)
+        #predicted_classes.reindex(['predicted_class', ])
+        #predicted_classes.rename(index=str, columns={list(predicted_classes[0]): 'predicted_class'})
+        rules_performance = []
+
+        for rule in rule_list:
+            #print(rule)
+            rule_complex = rule[0]
+            covered_examples = self.get_covered_examples(test_data, rule_complex)
+            indexes = list(covered_examples)
+            predicted_class = rule[1]
+            correct_predictions = 0
+            wrong_predictions = 0
+            for index in indexes:
+                predicted_classes[index] = predicted_class
+                if test_classes[index] == predicted_class:
+                    correct_predictions += 1
+                else:
+                    wrong_predictions += 1
+            #print(correct_predictions, wrong_predictions)
+            sum = correct_predictions + wrong_predictions
+            if sum > 0:
+                accuracy = correct_predictions / sum
+            else:
+                accuracy = ''
+            performance = {'rule': rule,
+                           'predicted class': predicted_class,
+                           'covered examples': len(indexes),
+                           'correct predictions': correct_predictions,
+                           'wrong predictions': wrong_predictions,
+                           'rule accuracy': accuracy}
+            rules_performance.append(performance)
+
+        return rules_performance, accuracy_score(test_classes, predicted_classes)
 
     def compute_selectors(self):
         """
@@ -106,7 +143,7 @@ class CN2:
         ##print('$ remove_examples')
         self._E = self._E.drop(indexes)
 
-    def get_covered_examples(self, best_cpx):
+    def get_covered_examples(self, all_examples, best_cpx):
         '''
         Returns the indexes of the examples from in E covered by the complex.
         :param best_cpx: list of attribute-value tuples.
@@ -123,8 +160,8 @@ class CN2:
                 values[attribute] = set(self.data[attribute])
 
         # Getting the indexes of the covered examples
-        examples = self._E
-        covered_examples = examples[examples.isin(values).all(axis=1)]
+        #print(str(all_examples))
+        covered_examples = all_examples[all_examples.isin(values).all(axis=1)]
 
         return covered_examples.index
 
@@ -171,7 +208,7 @@ class CN2:
         return new_star
 
     def significance(self, tested_complex):
-        covered_examples = self.get_covered_examples(tested_complex)
+        covered_examples = self.get_covered_examples(self._E, tested_complex)
         classes = self.data.loc[covered_examples, [list(self.data)[-1]]]
         covered_num_instances = len(classes)
         covered_counts = classes.iloc[:,0].value_counts()
@@ -187,7 +224,7 @@ class CN2:
         return significance
 
     def entropy(self, tested_complex):
-        covered_examples = self.get_covered_examples(tested_complex)
+        covered_examples = self.get_covered_examples(self._E, tested_complex)
         classes = self.data.loc[covered_examples, [list(self.data)[-1]]]
         num_instances = len(classes)
         class_counts = classes.iloc[:,0].value_counts()
