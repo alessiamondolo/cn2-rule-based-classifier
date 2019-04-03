@@ -6,7 +6,6 @@ import pickle
 from sklearn.metrics import accuracy_score
 
 
-# TODO: check copy of list insted of passing by reference
 class CN2:
 
     _dataPath = '../Data/csv/'
@@ -49,6 +48,7 @@ class CN2:
 
                 rule_list.append((best_cpx, most_common_class, coverage, precision))
             else:
+                # TODO: remove this else before delivery
                 print('######## Best complex is None! ########')
                 if len(self._E) > 0:
                     most_common_class, count = self.get_most_common_class(self._E.index)
@@ -67,7 +67,6 @@ class CN2:
         return rule_list
 
     def predict(self, test_file_name, rule_list):
-        # TODO: create function to predict the labels based on the previously created rule set
         test_data = pd.read_csv(self._dataPath + test_file_name)
         test_classes = test_data.iloc[:, -1].values
         test_data = test_data.iloc[:, :-1]
@@ -77,56 +76,37 @@ class CN2:
 
         for rule in rule_list:
             rule_complex = rule[0]
+
             if rule_complex is not None:
                 covered_examples = self.get_covered_examples(remaining_examples, rule_complex)
                 remaining_examples = self.remove_examples(remaining_examples, covered_examples)
                 indexes = list(covered_examples)
-                predicted_class = rule[1]
-                correct_predictions = 0
-                wrong_predictions = 0
-                for index in indexes:
-                    predicted_classes[index] = predicted_class
-                    if test_classes[index] == predicted_class:
-                        correct_predictions += 1
-                    else:
-                        wrong_predictions += 1
-                sums = correct_predictions + wrong_predictions
-                if sums > 0:
-                    accuracy = str(correct_predictions / sums)
+            elif len(remaining_examples) > 0:
+                print('Using default class')
+                print(remaining_examples)
+                indexes = list(remaining_examples.index)
+
+            predicted_class = rule[1]
+            correct_predictions = 0
+            wrong_predictions = 0
+            for index in indexes:
+                predicted_classes[index] = predicted_class
+                if test_classes[index] == predicted_class:
+                    correct_predictions += 1
                 else:
-                    accuracy = '-'
-                performance = {'rule': rule,
-                               'predicted class': predicted_class,
-                               'covered examples': len(indexes),
-                               'correct predictions': correct_predictions,
-                               'wrong predictions': wrong_predictions,
-                               'rule accuracy': accuracy}
-                rules_performance.append(performance)
+                    wrong_predictions += 1
+            sums = correct_predictions + wrong_predictions
+            if sums > 0:
+                accuracy = str(correct_predictions / sums)
             else:
-                if len(remaining_examples) > 0:
-                    print('Using default class')
-                    indexes = list(remaining_examples.index)
-                    predicted_class = rule[1]
-                    correct_predictions = 0
-                    wrong_predictions = 0
-                    for index in indexes:
-                        predicted_classes[index] = predicted_class
-                        if test_classes[index] == predicted_class:
-                            correct_predictions += 1
-                        else:
-                            wrong_predictions += 1
-                    sums = correct_predictions + wrong_predictions
-                    if sums > 0:
-                        accuracy = str(correct_predictions / sums)
-                    else:
-                        accuracy = '-'
-                    performance = {'rule': rule,
-                                   'predicted class': predicted_class,
-                                   'covered examples': len(indexes),
-                                   'correct predictions': correct_predictions,
-                                   'wrong predictions': wrong_predictions,
-                                   'rule accuracy': accuracy}
-                    rules_performance.append(performance)
+                accuracy = '-'
+            performance = {'rule': rule,
+                           'predicted class': predicted_class,
+                           'covered examples': len(indexes),
+                           'correct predictions': correct_predictions,
+                           'wrong predictions': wrong_predictions,
+                           'rule accuracy': accuracy}
+            rules_performance.append(performance)
 
         return rules_performance, accuracy_score(test_classes, predicted_classes)
 
@@ -229,7 +209,6 @@ class CN2:
                         if c > 1:
                             duplicate = True
                             break
-                    # TODO: check the condition 'new_complex not in star'
                     if not duplicate:
                         new_star.append(new_complex)
         else:
@@ -283,7 +262,8 @@ class CN2:
                 rule_string += ', then class=' + complex_class + ' [covered examples = ' + str(coverage) + ', precision = ' \
                                + str(precision) + ']'
             else:
-                rule_string += 'Default: class=' + complex_class
+                rule_string += 'Default: class=' + complex_class + ' [covered examples = ' + str(coverage) + ', precision = ' \
+                               + str(precision) + ']'
             print(rule_string)
             rule_string = ''
 
@@ -313,5 +293,6 @@ if __name__ == "__main__":
         vals.append(val)
 
     table = pd.DataFrame([v for v in vals], columns=list(dict.fromkeys(keys)))
-    print(table)
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(table)
     table.to_csv('../Data/output/zoo_performance.csv')
