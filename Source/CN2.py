@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import collections
+import time
+import pickle
 from sklearn.metrics import accuracy_score
 
 
@@ -23,7 +25,7 @@ class CN2:
         The file must be located in the '../Data/csv/' folder.
         """
         self.data = pd.read_csv(self._dataPath + file_name)
-        self._E = self.data
+        self._E = self.data.copy()
         self.compute_selectors()
 
         # This list will contains the complex-class pairs that will represent the rules found by the CN2 algorithm.
@@ -34,9 +36,12 @@ class CN2:
             print('New best complex: ' + str(best_cpx))
             if best_cpx is not None:
                 covered_examples = self.get_covered_examples(self._E, best_cpx)
-                most_common_class = self.get_most_common_class(covered_examples)
-                self.remove_examples(covered_examples)
-                rule_list.append((best_cpx, most_common_class))
+                coverage = len(covered_examples)
+                most_common_class, count = self.get_most_common_class(covered_examples)
+                # Precision: how many covered examples belong to the most common class
+                #precision =
+                self._E = self.remove_examples(self._E, covered_examples)
+                rule_list.append((best_cpx, most_common_class, coverage))
             else:
                 if len(self._E) > 0:
                     rule_list.append((None, self.get_most_common_class(self._E)))
@@ -50,15 +55,13 @@ class CN2:
         test_classes = test_data.iloc[:, -1].values
         test_data = test_data.iloc[:, :-1]
         predicted_classes = [None] * len(test_classes)
-        #predicted_classes = pd.DataFrame().reindex_like(test_classes)
-        #predicted_classes.reindex(['predicted_class', ])
-        #predicted_classes.rename(index=str, columns={list(predicted_classes[0]): 'predicted_class'})
         rules_performance = []
+        remaining_examples = test_data.copy()
 
         for rule in rule_list:
-            #print(rule)
             rule_complex = rule[0]
-            covered_examples = self.get_covered_examples(test_data, rule_complex)
+            covered_examples = self.get_covered_examples(remaining_examples, rule_complex)
+            remaining_examples = self.remove_examples(remaining_examples, covered_examples)
             indexes = list(covered_examples)
             predicted_class = rule[1]
             correct_predictions = 0
@@ -69,12 +72,11 @@ class CN2:
                     correct_predictions += 1
                 else:
                     wrong_predictions += 1
-            #print(correct_predictions, wrong_predictions)
-            sum = correct_predictions + wrong_predictions
-            if sum > 0:
-                accuracy = correct_predictions / sum
+            sums = correct_predictions + wrong_predictions
+            if sums > 0:
+                accuracy = str(correct_predictions / sums)
             else:
-                accuracy = ''
+                accuracy = '-'
             performance = {'rule': rule,
                            'predicted class': predicted_class,
                            'covered examples': len(indexes),
@@ -91,7 +93,6 @@ class CN2:
         the pairs attribute-value, excluding the class attribute.
         Assumption: the class attribute is the last attribute of the dataset.
         """
-        #print('$ compute_selectors')
         attributes = list(self.data)
 
         # removing the class attribute
@@ -103,8 +104,6 @@ class CN2:
                 self._selectors.append((attribute, value))
 
     def find_best_complex(self):
-        # TODO: create function to find the best complex
-        ##print('$ find_best_complex')
         best_complex = None
         best_complex_entropy = float('inf')
         best_complex_significance = 0
@@ -113,39 +112,35 @@ class CN2:
         while True:
             entropy_measures = {}
             new_star = self.specialize_star(star, self._selectors)
-            ##print('New star: ' + str(new_star))
             for idx in range(len(new_star)):
                 tested_complex = new_star[idx]
                 significance = self.significance(tested_complex)
-                #print('Significance of ' + str(tested_complex) + ' : ' + str(significance))
                 entropy = self.entropy(tested_complex)
-                #print('Entropy of ' + str(tested_complex) + ' : ' + str(entropy))
                 entropy_measures[idx] = entropy
                 if significance > self.min_significance and \
                         entropy < best_complex_entropy:
-                    #print('New best complex found')
                     best_complex = tested_complex.copy()
                     best_complex_entropy = entropy
                     best_complex_significance = significance
-            top_complexes = sorted(entropy_measures.items(), key=lambda x: x[1], reverse=True)[:self.star_max_size]
+            top_complexes = sorted(entropy_measures.items(), key=lambda x: x[1], reverse=False)[:self.star_max_size]
             star = [new_star[x[0]] for x in top_complexes]
-            ##print('Star: ' + str(star))
             if len(star) == 0 or best_complex_significance < self.min_significance:
                 break
 
         return best_complex
 
-    def remove_examples(self, indexes):
+    def remove_examples(self, all_examples, indexes):
         '''
         Removes from E the covered examples with the indexes received as parameter.
         :param indexes: list of index labels that identify the instances to remove from E.
         '''
-        ##print('$ remove_examples')
-        self._E = self._E.drop(indexes)
+        remaining_examples = all_examples.drop(indexes)
+        return remaining_examples
 
     def get_covered_examples(self, all_examples, best_cpx):
         '''
         Returns the indexes of the examples from in E covered by the complex.
+        :param all_examples:
         :param best_cpx: list of attribute-value tuples.
         :return:
         '''
@@ -160,9 +155,7 @@ class CN2:
                 values[attribute] = set(self.data[attribute])
 
         # Getting the indexes of the covered examples
-        #print(str(all_examples))
         covered_examples = all_examples[all_examples.isin(values).all(axis=1)]
-
         return covered_examples.index
 
     def get_most_common_class(self, covered_examples):
@@ -173,21 +166,18 @@ class CN2:
         class.
         :return: label of the most common class.
         '''
-        ##print('$ get_most_common_class')
         classes = self.data.loc[covered_examples, [list(self.data)[-1]]]
+        print(classes.iloc[:,0].value_counts())
         most_common_class = classes.iloc[:,0].value_counts().idxmax()
         return most_common_class
 
     def specialize_star(self, star, selectors):
-        ##print('$ specialize_star')
-        ##print('## Star: ' + str(star))
         new_star = []
         if len(star) > 0:
             for complex in star:
                 for selector in selectors:
                     new_complex = complex.copy()
                     new_complex.append(selector)
-                    #print('New temporary complex: ' + str(new_complex))
 
                     # Add the new complex only if they are valid
                     count = collections.Counter([x[0] for x in new_complex])
@@ -198,13 +188,10 @@ class CN2:
                             break
                     # TODO: check the condition 'new_complex not in star'
                     if not duplicate:
-                        #print('Valid')
                         new_star.append(new_complex)
-                        #print('New temporary new_star: ' + str(new_star))
         else:
             for selector in selectors:
                 new_star.append([selector])
-        #print('New star: ' + str(new_star))
         return new_star
 
     def significance(self, tested_complex):
@@ -236,7 +223,6 @@ class CN2:
         return entropy
 
     def print_rules(self, rules):
-        ##print('$ print_rules')
         rule_string = ''
         for rule in rules:
             complex = rule[0]
@@ -253,3 +239,32 @@ class CN2:
                 rule_string += 'class=' + complex_class
             print(rule_string)
             rule_string = ''
+
+
+if __name__ == "__main__":
+    cn2 = CN2()
+    train_start = time.time()
+    rules = cn2.fit('zoo_t2.csv')
+    train_end = time.time()
+    print('Training time: ' + str(train_end-train_start) + ' s')
+    print('Rules:')
+    cn2.print_rules(rules)
+
+    with open('rules_2', 'wb') as f:
+        pickle.dump(rules, f)
+
+    rules_performance, accuracy = cn2.predict('zoo_t1.csv', rules)
+    print('Accuracy: ', accuracy)
+    print('Testing performance:')
+    keys = []
+    vals = []
+    for data in rules_performance:
+        val = []
+        for k, v in data.items():
+            keys.append(k)
+            val.append(v)
+        vals.append(val)
+
+    table = pd.DataFrame([v for v in vals], columns=list(dict.fromkeys(keys)))
+    print(table)
+    table.to_csv('../Data/csv/zoo_performance_2.csv')
