@@ -40,6 +40,9 @@ class CN2:
                 most_common_class, count = self.get_most_common_class(covered_examples)
                 self._E = self.remove_examples(self._E, covered_examples)
 
+                print('######### BEST COMPLEX: ', best_cpx)
+                print('remaining examples: ', len(self._E))
+
                 # Precision: how many covered examples belong to the most common class
                 total = 0
                 if most_common_class in classes_count.keys():
@@ -67,6 +70,15 @@ class CN2:
         return rule_list
 
     def predict(self, test_file_name, rule_list):
+        """
+        This function is used to test the CN2 classification model on the test file required as parameter, using the
+        rule list also received as parameter. The rule list can be either prduced with the fit function, or loaded with
+        pickle.
+        :param test_file_name: the name of the testing file in CSV format.
+        The file must be located in the '../Data/csv/' folder.
+        :param rule_list: a list containing the rules to be used to test the dataset.
+        The rules are assumed to be in the correct format (the same produced by the fit function).
+        """
         test_data = pd.read_csv(self._dataPath + test_file_name)
         test_classes = test_data.iloc[:, -1].values
         test_data = test_data.iloc[:, :-1]
@@ -82,8 +94,6 @@ class CN2:
                 remaining_examples = self.remove_examples(remaining_examples, covered_examples)
                 indexes = list(covered_examples)
             elif len(remaining_examples) > 0:
-                print('Using default class')
-                print(remaining_examples)
                 indexes = list(remaining_examples.index)
 
             predicted_class = rule[1]
@@ -127,6 +137,12 @@ class CN2:
                 self._selectors.append((attribute, value))
 
     def find_best_complex(self):
+        '''
+        This function finds the best complex by continuously specializing the list of the best complex found so far and
+        updating the best complex if the new complex found has a lower entropy than the previous one.
+        The function keeps searching until the best complex has an accepted significance level.
+        :return: the best complex found.
+        '''
         best_complex = None
         best_complex_entropy = float('inf')
         best_complex_significance = 0
@@ -138,13 +154,14 @@ class CN2:
             for idx in range(len(new_star)):
                 tested_complex = new_star[idx]
                 significance = self.significance(tested_complex)
-                entropy = self.entropy(tested_complex)
-                entropy_measures[idx] = entropy
-                if significance > self.min_significance and \
-                        entropy < best_complex_entropy:
-                    best_complex = tested_complex.copy()
-                    best_complex_entropy = entropy
-                    best_complex_significance = significance
+                if significance > self.min_significance:
+                    entropy = self.entropy(tested_complex)
+                    #print(tested_complex, entropy, significance)
+                    entropy_measures[idx] = entropy
+                    if entropy < best_complex_entropy:
+                        best_complex = tested_complex.copy()
+                        best_complex_entropy = entropy
+                        best_complex_significance = significance
             top_complexes = sorted(entropy_measures.items(), key=lambda x: x[1], reverse=False)[:self.star_max_size]
             star = [new_star[x[0]] for x in top_complexes]
             if len(star) == 0 or best_complex_significance < self.min_significance:
@@ -154,8 +171,10 @@ class CN2:
 
     def remove_examples(self, all_examples, indexes):
         '''
-        Removes from E the covered examples with the indexes received as parameter.
-        :param indexes: list of index labels that identify the instances to remove from E.
+        Removes from the dataframe of the remaining examples the covered examples with the indexes received as parameter.
+        :param all_examples: the dataframe from which we want to remove the examples.
+        :param indexes: list of index labels that identify the instances to remove.
+        :return: the remaining examples after removing the required examples.
         '''
         remaining_examples = all_examples.drop(indexes)
         return remaining_examples
@@ -163,9 +182,9 @@ class CN2:
     def get_covered_examples(self, all_examples, best_cpx):
         '''
         Returns the indexes of the examples from in E covered by the complex.
-        :param all_examples:
+        :param all_examples: the dataframe from which we want to find the covered examples.
         :param best_cpx: list of attribute-value tuples.
-        :return:
+        :return: the indexes of the covered examples.
         '''
         # Creating a dictionary with the attributes of the best complex as key, and the values of that attribute as a
         # list of values. Then, add all the possible values for the attributes that are not part of the rules of the
@@ -195,6 +214,12 @@ class CN2:
         return most_common_class, count
 
     def specialize_star(self, star, selectors):
+        '''
+
+        :param star:
+        :param selectors:
+        :return:
+        '''
         new_star = []
         if len(star) > 0:
             for complex in star:
@@ -217,6 +242,11 @@ class CN2:
         return new_star
 
     def significance(self, tested_complex):
+        '''
+        This function computes the significance of a complex
+        :param tested_complex: the complex for which we want to compute the significance.
+        :return: the entropy of the significance.
+        '''
         covered_examples = self.get_covered_examples(self._E, tested_complex)
         classes = self.data.loc[covered_examples, [list(self.data)[-1]]]
         covered_num_instances = len(classes)
@@ -232,19 +262,30 @@ class CN2:
 
         return significance
 
+
     def entropy(self, tested_complex):
+        '''
+        This function computes the entropy of a complex
+        :param tested_complex: the complex for which we want to compute the entropy.
+        :return: the entropy of the complex.
+        '''
         covered_examples = self.get_covered_examples(self._E, tested_complex)
         classes = self.data.loc[covered_examples, [list(self.data)[-1]]]
         num_instances = len(classes)
         class_counts = classes.iloc[:,0].value_counts()
         class_probabilities = class_counts.divide(num_instances)
-        log2_of_classprobs = np.log2(class_probabilities)
-        plog2p = class_probabilities.multiply(log2_of_classprobs)
+        log2 = np.log2(class_probabilities)
+        plog2p = class_probabilities.multiply(log2)
         entropy = plog2p.sum() * -1
 
         return entropy
 
     def print_rules(self, rules):
+        '''
+        This function prints the rules received as parameter in an understandable way.
+        It also prints the coverage and precision of each rule.
+        :param rules: the rules that have to be printed.
+        '''
         rule_string = ''
         for rule in rules:
             complex = rule[0]
@@ -269,16 +310,26 @@ class CN2:
 
 
 if __name__ == "__main__":
+
+    # ZOO DATASET
+    print('------------------------------')
+    print('------------------------------')
+    print('ZOO DATASET')
+    print('------------------------------')
     cn2 = CN2()
     train_start = time.time()
     rules = cn2.fit('zoo_train.csv')
     train_end = time.time()
-    print('Training time: ' + str(train_end-train_start) + ' s')
+    print('Training time: ', train_end-train_start, ' s')
     print('Rules:')
     cn2.print_rules(rules)
 
-    with open('../Data/output/rules', 'wb') as f:
+    with open('../Data/output/zoo_rules', 'wb') as f:
         pickle.dump(rules, f)
+
+    # These two lines can be used to load a previously computed set of rules.
+    # with open('../Data/output/zoo_rules', 'rb') as f:
+    #     rules = pickle.load(f)
 
     rules_performance, accuracy = cn2.predict('zoo_test.csv', rules)
     print('Accuracy: ', accuracy)
@@ -296,3 +347,77 @@ if __name__ == "__main__":
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):
         print(table)
     table.to_csv('../Data/output/zoo_performance.csv')
+
+    # SOYBEAN DATASET
+    print('------------------------------')
+    print('------------------------------')
+    print('SOYBEAN DATASET')
+    print('------------------------------')
+    cn2 = CN2()
+    train_start = time.time()
+    rules = cn2.fit('soybean_train.csv')
+    train_end = time.time()
+    print('Training time: ', train_end - train_start, ' s')
+    print('Rules:')
+    cn2.print_rules(rules)
+
+    with open('../Data/output/soybean_rules', 'wb') as f:
+        pickle.dump(rules, f)
+
+    # These two lines can be used to load a previously computed set of rules.
+    # with open('../Data/output/soybean_rules', 'rb') as f:
+    #     rules = pickle.load(f)
+
+    rules_performance, accuracy = cn2.predict('soybean_test.csv', rules)
+    print('Accuracy: ', accuracy)
+    print('Testing performance:')
+    keys = []
+    vals = []
+    for data in rules_performance:
+        val = []
+        for k, v in data.items():
+            keys.append(k)
+            val.append(v)
+        vals.append(val)
+
+    table = pd.DataFrame([v for v in vals], columns=list(dict.fromkeys(keys)))
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(table)
+    table.to_csv('../Data/output/soybean_performance.csv')
+
+    # IRIS DATASET
+    print('------------------------------')
+    print('------------------------------')
+    print('IRIS DATASET')
+    print('------------------------------')
+    cn2 = CN2()
+    train_start = time.time()
+    rules = cn2.fit('iris_train.csv')
+    train_end = time.time()
+    print('Training time: ', train_end - train_start, ' s')
+    print('Rules:')
+    cn2.print_rules(rules)
+
+    with open('../Data/output/iris_rules', 'wb') as f:
+        pickle.dump(rules, f)
+
+    # These two lines can be used to load a previously computed set of rules.
+    # with open('../Data/output/iris_rules', 'rb') as f:
+    #     rules = pickle.load(f)
+
+    rules_performance, accuracy = cn2.predict('iris_test.csv', rules)
+    print('Accuracy: ', accuracy)
+    print('Testing performance:')
+    keys = []
+    vals = []
+    for data in rules_performance:
+        val = []
+        for k, v in data.items():
+            keys.append(k)
+            val.append(v)
+        vals.append(val)
+
+    table = pd.DataFrame([v for v in vals], columns=list(dict.fromkeys(keys)))
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(table)
+    table.to_csv('../Data/output/iris_performance.csv')
