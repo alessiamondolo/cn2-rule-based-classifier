@@ -1,15 +1,15 @@
 ,rule,predicted class,covered examples,correct predictions,wrong predictions,rule accuracy
-0,"([('feathers', True)], 'bird', 15, 1.0)",bird,5,5,0,1.0
-1,"([('milk', True)], 'mammal', 28, 1.0)",mammal,13,13,0,1.0
-2,"([('hair', True)], 'insect', 2, 0.4)",insect,2,2,0,1.0
-3,"([('airborne', True)], 'insect', 1, 0.2)",insect,1,1,0,1.0
-4,"([('fins', True)], 'fish', 9, 1.0)",fish,4,4,0,1.0
-5,"([('legs', 5)], 'invertebrate', 1, 0.125)",invertebrate,0,0,0,-
-6,"([('legs', 8)], 'invertebrate', 2, 0.25)",invertebrate,0,0,0,-
-7,"([('eggs', False)], 'reptile', 1, 0.5)",reptile,0,0,0,-
-8,"([('breathes', False)], 'invertebrate', 3, 0.375)",invertebrate,2,2,0,1.0
-9,"([('aquatic', True)], 'amphibian', 3, 1.0)",amphibian,1,1,0,1.0
-10,"([('predator', True)], 'reptile', 1, 0.5)",reptile,2,2,0,1.0
-11,"([('legs', 0)], 'invertebrate', 2, 0.25)",invertebrate,0,0,0,-
-12,"([('hair', False)], 'insect', 2, 0.4)",insect,1,0,1,0.0
-13,"(None, 'mammal', 28, 1.0)",mammal,1,0,1,0.0
+0,"([('feathers', True)], 'bird', 1.0, 1.0)",bird,5,5,0,1.0
+1,"([('milk', True)], 'mammal', 1.0, 1.0)",mammal,13,13,0,1.0
+2,"([('hair', True)], 'insect', 0.4, 1.0)",insect,2,2,0,1.0
+3,"([('airborne', True)], 'insect', 0.2, 1.0)",insect,1,1,0,1.0
+4,"([('fins', True)], 'fish', 1.0, 1.0)",fish,4,4,0,1.0
+5,"([('legs', 5)], 'invertebrate', 0.125, 1.0)",invertebrate,0,0,0,-
+6,"([('legs', 8)], 'invertebrate', 0.25, 1.0)",invertebrate,0,0,0,-
+7,"([('eggs', False)], 'reptile', 0.5, 1.0)",reptile,0,0,0,-
+8,"([('breathes', False)], 'invertebrate', 0.375, 1.0)",invertebrate,2,2,0,1.0
+9,"([('aquatic', True)], 'amphibian', 1.0, 1.0)",amphibian,1,1,0,1.0
+10,"([('predator', True)], 'reptile', 0.5, 1.0)",reptile,2,2,0,1.0
+11,"([('legs', 0)], 'invertebrate', 0.25, 1.0)",invertebrate,0,0,0,-
+12,"([('hair', False)], 'insect', 0.4, 1.0)",insect,1,0,1,0.0
+13,"(None, 'mammal', 1.0, 0.4)",mammal,1,0,1,0.0

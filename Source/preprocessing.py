@@ -71,9 +71,11 @@ for column in df:
 sepallength = pd.cut(df['sepallength'], 5).astype(str)
 sepalwidth = pd.cut(df['sepalwidth'], 5).astype(str)
 petallength = pd.cut(df['petallength'], 5).astype(str)
+petalwidth = pd.cut(df['petalwidth'], 5).astype(str)
 df['sepallength'] = sepallength
 df['sepalwidth'] = sepalwidth
 df['petallength'] = petallength
+df['petalwidth'] = petalwidth
 
 # Storing the clean dataset in a .csv file
 df.to_csv('../Data/csv/iris.csv', index=False)

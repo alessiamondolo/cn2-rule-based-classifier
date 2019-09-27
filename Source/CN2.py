@@ -12,7 +12,7 @@ class CN2:
     _E = []
     _selectors = []
 
-    def __init__(self, star_max_size=5, min_significance = 0.5):
+    def __init__(self, star_max_size=5, min_significance=0.5):
         self.data = None
         self.star_max_size = star_max_size
         self.min_significance = min_significance
@@ -27,7 +27,7 @@ class CN2:
         self._E = self.data.copy()
         self.compute_selectors()
 
-        # This list will contains the complex-class pairs that will represent the rules found by the CN2 algorithm.
+        # This list will contain the complex-class pairs that will represent the rules found by the CN2 algorithm.
         rule_list = []
         classes = self.data.loc[:, [list(self.data)[-1]]]
         classes_count = classes.iloc[:,0].value_counts()
@@ -36,43 +36,32 @@ class CN2:
             best_cpx = self.find_best_complex()
             if best_cpx is not None:
                 covered_examples = self.get_covered_examples(self._E, best_cpx)
-                coverage = len(covered_examples)
                 most_common_class, count = self.get_most_common_class(covered_examples)
                 self._E = self.remove_examples(self._E, covered_examples)
 
-                print('######### BEST COMPLEX: ', best_cpx)
-                print('remaining examples: ', len(self._E))
-
-                # Precision: how many covered examples belong to the most common class
                 total = 0
                 if most_common_class in classes_count.keys():
                     total = classes_count[most_common_class]
-                precision = count / total
+                coverage = count / total
+                # Precision: how many covered examples belong to the most common class
+                precision = count / len(covered_examples)
 
                 rule_list.append((best_cpx, most_common_class, coverage, precision))
             else:
-                # TODO: remove this else before delivery
-                print('######## Best complex is None! ########')
-                if len(self._E) > 0:
-                    most_common_class, count = self.get_most_common_class(self._E.index)
-                    total = 0
-                    if most_common_class in classes_count.keys():
-                        total = classes_count[most_common_class]
-                    precision = count / total
-                    rule_list.append((None, most_common_class, len(self._E), precision))
                 break
 
         most_common_class, count = self.get_most_common_class(self.data.index)
         total = classes_count[most_common_class]
-        precision = count / total
-        rule_list.append((None, most_common_class, count, precision))
+        coverage = count / total
+        precision = count / len(self.data)
+        rule_list.append((None, most_common_class, coverage, precision))
 
         return rule_list
 
     def predict(self, test_file_name, rule_list):
         """
         This function is used to test the CN2 classification model on the test file required as parameter, using the
-        rule list also received as parameter. The rule list can be either prduced with the fit function, or loaded with
+        rule list also received as parameter. The rule list can be either produced with the fit function, or loaded with
         pickle.
         :param test_file_name: the name of the testing file in CSV format.
         The file must be located in the '../Data/csv/' folder.
@@ -156,7 +145,6 @@ class CN2:
                 significance = self.significance(tested_complex)
                 if significance > self.min_significance:
                     entropy = self.entropy(tested_complex)
-                    #print(tested_complex, entropy, significance)
                     entropy_measures[idx] = entropy
                     if entropy < best_complex_entropy:
                         best_complex = tested_complex.copy()
@@ -171,7 +159,7 @@ class CN2:
 
     def remove_examples(self, all_examples, indexes):
         '''
-        Removes from the dataframe of the remaining examples the covered examples with the indexes received as parameter.
+        Removes from the dataframe of the remaining examples, the covered examples with the indexes received as parameter.
         :param all_examples: the dataframe from which we want to remove the examples.
         :param indexes: list of index labels that identify the instances to remove.
         :return: the remaining examples after removing the required examples.
@@ -181,7 +169,7 @@ class CN2:
 
     def get_covered_examples(self, all_examples, best_cpx):
         '''
-        Returns the indexes of the examples from in E covered by the complex.
+        Returns the indexes of the examples from the list of all examples that are covered by the complex.
         :param all_examples: the dataframe from which we want to find the covered examples.
         :param best_cpx: list of attribute-value tuples.
         :return: the indexes of the covered examples.
@@ -215,10 +203,11 @@ class CN2:
 
     def specialize_star(self, star, selectors):
         '''
-
-        :param star:
-        :param selectors:
-        :return:
+        This function creates a new_star list by combining the complexes in star with the selectors, and removing the
+        non-valid complexes created.
+        :param star: the list of complexes to be specialized
+        :param selectors: the list of selector with which to specialize star
+        :return: the new_star list with the specialized complexes
         '''
         new_star = []
         if len(star) > 0:
@@ -353,7 +342,7 @@ if __name__ == "__main__":
     print('------------------------------')
     print('SOYBEAN DATASET')
     print('------------------------------')
-    cn2 = CN2()
+    cn2 = CN2(min_significance=1.0)
     train_start = time.time()
     rules = cn2.fit('soybean_train.csv')
     train_end = time.time()

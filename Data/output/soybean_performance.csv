@@ -1,0 +1,95 @@
+,rule,predicted class,covered examples,correct predictions,wrong predictions,rule accuracy
+0,"([('leafspots-marg', 'no-w-s-marg')], 'bacterial-pustule', 0.8, 1.0)",bacterial-pustule,5,5,0,1.0
+1,"([('leaf-mild', 'lower-surf')], 'downy-mildew', 1.0, 1.0)",downy-mildew,7,7,0,1.0
+2,"([('leaf-mild', 'upper-surf')], 'powdery-mildew', 1.0, 1.0)",powdery-mildew,10,10,0,1.0
+3,"([('mycelium', 'present')], 'rhizoctonia-root-rot', 0.35294117647058826, 1.0)",rhizoctonia-root-rot,0,0,0,-
+4,"([('int-discolor', 'brown')], 'brown-stem-rot', 1.0, 1.0)",brown-stem-rot,14,14,0,1.0
+5,"([('int-discolor', 'black')], 'charcoal-rot', 1.0, 1.0)",charcoal-rot,8,8,0,1.0
+6,"([('precip', 'lt-norm')], 'phyllosticta-leaf-spot', 0.3333333333333333, 1.0)",phyllosticta-leaf-spot,5,5,0,1.0
+7,"([('shriveling', 'present')], 'anthracnose', 0.5625, 1.0)",anthracnose,5,4,1,0.8
+8,"([('fruit-spots', 'brown-w/blk-specks'), ('date', 'october')], 'anthracnose', 0.0625, 1.0)",anthracnose,2,1,1,0.5
+9,"([('fruit-spots', 'brown-w/blk-specks'), ('date', 'september')], 'anthracnose', 0.15625, 1.0)",anthracnose,3,3,0,1.0
+10,"([('leafspots-halo', 'yellow-halos'), ('date', 'may')], 'bacterial-pustule', 0.06666666666666667, 1.0)",bacterial-pustule,0,0,0,-
+11,"([('mold-growth', 'present')], 'anthracnose', 0.0625, 1.0)",anthracnose,1,1,0,1.0
+12,"([('seed-size', 'lt-norm')], 'bacterial-pustule', 0.06666666666666667, 1.0)",bacterial-pustule,0,0,0,-
+13,"([('leafspots-halo', 'yellow-halos')], 'bacterial-blight', 0.5, 1.0)",bacterial-blight,2,2,0,1.0
+14,"([('leaf-malf', 'present'), ('date', 'july')], 'phyllosticta-leaf-spot', 0.16666666666666666, 1.0)",phyllosticta-leaf-spot,0,0,0,-
+15,"([('fruit-spots', 'colored'), ('temp', 'lt-norm')], 'purple-seed-stain', 0.14285714285714285, 1.0)",purple-seed-stain,2,2,0,1.0
+16,"([('fruit-spots', 'colored'), ('severity', 'pot-severe')], 'frog-eye-leaf-spot', 0.3142857142857143, 1.0)",frog-eye-leaf-spot,6,6,0,1.0
+17,"([('stem-cankers', 'above-soil'), ('date', 'july')], 'phytophthora-rot', 0.07142857142857142, 1.0)",phytophthora-rot,2,2,0,1.0
+18,"([('canker-lesion', 'tan'), ('date', 'october')], 'purple-seed-stain', 0.14285714285714285, 1.0)",purple-seed-stain,1,1,0,1.0
+19,"([('fruit-spots', 'colored'), ('date', 'october')], 'frog-eye-leaf-spot', 0.11428571428571428, 1.0)",frog-eye-leaf-spot,3,3,0,1.0
+20,"([('date', 'october'), ('plant-stand', 'lt-normal')], 'alternarialeaf-spot', 0.11666666666666667, 1.0)",alternarialeaf-spot,1,1,0,1.0
+21,"([('date', 'october'), ('precip', 'norm')], 'alternarialeaf-spot', 0.05, 1.0)",alternarialeaf-spot,2,1,1,0.5
+22,"([('date', 'october'), ('temp', 'gt-norm')], 'alternarialeaf-spot', 0.11666666666666667, 1.0)",alternarialeaf-spot,4,4,0,1.0
+23,"([('fruit-spots', 'brown-w/blk-specks'), ('date', 'august')], 'anthracnose', 0.0625, 1.0)",anthracnose,4,3,1,0.75
+24,"([('stem-cankers', 'above-soil'), ('plant-stand', 'normal')], 'anthracnose', 0.03125, 1.0)",anthracnose,0,0,0,-
+25,"([('stem-cankers', 'above-soil'), ('date', 'may')], 'phytophthora-rot', 0.2857142857142857, 1.0)",phytophthora-rot,1,1,0,1.0
+26,"([('canker-lesion', 'tan'), ('plant-stand', 'lt-normal')], 'brown-spot', 0.015625, 1.0)",brown-spot,0,0,0,-
+27,"([('canker-lesion', 'tan'), ('temp', 'lt-norm')], 'purple-seed-stain', 0.14285714285714285, 1.0)",purple-seed-stain,1,1,0,1.0
+28,"([('temp', 'lt-norm'), ('date', 'may')], 'rhizoctonia-root-rot', 0.23529411764705882, 1.0)",rhizoctonia-root-rot,1,1,0,1.0
+29,"([('date', 'may'), ('plant-stand', 'normal')], 'brown-spot', 0.15625, 1.0)",brown-spot,4,4,0,1.0
+30,"([('canker-lesion', 'tan'), ('temp', 'gt-norm')], 'purple-seed-stain', 0.2857142857142857, 1.0)",purple-seed-stain,1,1,0,1.0
+31,"([('fruit-spots', 'colored'), ('crop-hist', 'diff-lst-year')], 'frog-eye-leaf-spot', 0.02857142857142857, 1.0)",frog-eye-leaf-spot,0,0,0,-
+32,"([('fruit-spots', 'colored'), ('precip', 'norm')], 'brown-spot', 0.015625, 1.0)",brown-spot,0,0,0,-
+33,"([('fruit-spots', 'colored'), ('date', 'august')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,0,0,0,-
+34,"([('fruit-spots', 'colored'), ('plant-stand', 'lt-normal')], 'frog-eye-leaf-spot', 0.1, 1.0)",frog-eye-leaf-spot,0,0,0,-
+35,"([('leaves', 'norm'), ('date', 'april')], 'rhizoctonia-root-rot', 0.23529411764705882, 1.0)",rhizoctonia-root-rot,1,1,0,1.0
+36,"([('roots', 'rotted')], 'bacterial-pustule', 0.06666666666666667, 1.0)",bacterial-pustule,0,0,0,-
+37,"([('leafspot-size', 'lt-1/8'), ('date', 'july')], 'bacterial-blight', 0.125, 1.0)",bacterial-blight,1,1,0,1.0
+38,"([('fruit-spots', 'colored'), ('hail', 'no')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,0,0,0,-
+39,"([('leafspot-size', 'lt-1/8'), ('plant-stand', 'lt-normal')], 'bacterial-blight', 0.125, 1.0)",bacterial-blight,0,0,0,-
+40,"([('fruit-pods', 'dna'), ('date', 'may')], 'phytophthora-rot', 0.07142857142857142, 1.0)",phytophthora-rot,0,0,0,-
+41,"([('date', 'may'), ('precip', 'gt-norm')], 'brown-spot', 0.125, 1.0)",brown-spot,4,4,0,1.0
+42,"([('fruit-spots', 'colored'), ('crop-hist', 'same-lst-two-yrs')], 'frog-eye-leaf-spot', 0.11428571428571428, 1.0)",frog-eye-leaf-spot,1,1,0,1.0
+43,"([('fruit-pods', 'dna'), ('date', 'april')], 'phytophthora-rot', 0.21428571428571427, 1.0)",phytophthora-rot,3,3,0,1.0
+44,"([('date', 'april')], 'brown-spot', 0.078125, 1.0)",brown-spot,0,0,0,-
+45,"([('leafspot-size', 'lt-1/8'), ('hail', 'yes')], 'purple-seed-stain', 0.07142857142857142, 1.0)",purple-seed-stain,0,0,0,-
+46,"([('leafspot-size', 'lt-1/8'), ('date', 'september')], 'bacterial-blight', 0.125, 1.0)",bacterial-blight,0,0,0,-
+47,"([('leafspot-size', 'lt-1/8'), ('crop-hist', 'same-lst-sev-yrs')], 'bacterial-blight', 0.0625, 1.0)",bacterial-blight,0,0,0,-
+48,"([('leaf-malf', 'present')], 'phyllosticta-leaf-spot', 0.16666666666666666, 1.0)",phyllosticta-leaf-spot,2,2,0,1.0
+49,"([('fruit-spots', 'colored'), ('date', 'september')], 'frog-eye-leaf-spot', 0.02857142857142857, 1.0)",frog-eye-leaf-spot,1,1,0,1.0
+50,"([('fruit-spots', 'colored')], 'brown-spot', 0.015625, 1.0)",brown-spot,0,0,0,-
+51,"([('canker-lesion', 'dk-brown-blk'), ('date', 'july')], 'anthracnose', 0.03125, 1.0)",anthracnose,0,0,0,-
+52,"([('canker-lesion', 'dk-brown-blk')], 'phytophthora-rot', 0.35714285714285715, 1.0)",phytophthora-rot,0,0,0,-
+53,"([('temp', 'lt-norm')], 'rhizoctonia-root-rot', 0.17647058823529413, 1.0)",rhizoctonia-root-rot,1,1,0,1.0
+54,"([('leaves', 'norm')], 'purple-seed-stain', 0.14285714285714285, 1.0)",purple-seed-stain,1,1,0,1.0
+55,"([('stem-cankers', 'above-soil')], 'anthracnose', 0.03125, 1.0)",anthracnose,0,0,0,-
+56,"([('leafspots-halo', 'absent')], 'diaporthe-stem-canker', 1.0, 1.0)",diaporthe-stem-canker,6,6,0,1.0
+57,"([('date', 'october')], 'alternarialeaf-spot', 0.08333333333333333, 1.0)",alternarialeaf-spot,2,2,0,1.0
+58,"([('severity', 'severe')], 'brown-spot', 0.0625, 1.0)",brown-spot,1,1,0,1.0
+59,"([('stem', 'abnorm')], 'brown-spot', 0.296875, 1.0)",brown-spot,9,7,2,0.7777777777777778
+60,"([('stem-cankers', 'above-sec-nde')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,0,0,0,-
+61,"([('lodging', 'no')], 'purple-seed-stain', 0.07142857142857142, 1.0)",purple-seed-stain,0,0,0,-
+62,"([('leafspot-size', 'lt-1/8')], 'bacterial-blight', 0.0625, 1.0)",bacterial-blight,1,1,0,1.0
+63,"([('seed', 'abnorm')], 'alternarialeaf-spot', 0.08333333333333333, 1.0)",alternarialeaf-spot,2,2,0,1.0
+64,"([('date', 'june'), ('plant-stand', 'normal')], 'brown-spot', 0.125, 1.0)",brown-spot,8,8,0,1.0
+65,"([('date', 'september'), ('temp', 'gt-norm')], 'alternarialeaf-spot', 0.25, 1.0)",alternarialeaf-spot,11,11,0,1.0
+66,"([('date', 'june'), ('precip', 'gt-norm')], 'brown-spot', 0.0625, 1.0)",brown-spot,1,1,0,1.0
+67,"([('plant-growth', 'abnorm')], 'frog-eye-leaf-spot', 0.02857142857142857, 1.0)",frog-eye-leaf-spot,1,0,1,0.0
+68,"([('seed-tmt', 'other')], 'phyllosticta-leaf-spot', 0.08333333333333333, 1.0)",phyllosticta-leaf-spot,1,0,1,0.0
+69,"([('date', 'june')], 'brown-spot', 0.015625, 1.0)",brown-spot,1,0,1,0.0
+70,"([('leaf-shread', 'present')], 'alternarialeaf-spot', 0.08333333333333333, 1.0)",alternarialeaf-spot,3,2,1,0.6666666666666666
+71,"([('crop-hist', 'same-lst-yr'), ('date', 'july')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,1,1,0,1.0
+72,"([('crop-hist', 'same-lst-yr'), ('plant-stand', 'normal')], 'frog-eye-leaf-spot', 0.05714285714285714, 1.0)",frog-eye-leaf-spot,3,0,3,0.0
+73,"([('crop-hist', 'same-lst-yr'), ('date', 'august')], 'alternarialeaf-spot', 0.016666666666666666, 1.0)",alternarialeaf-spot,1,1,0,1.0
+74,"([('crop-hist', 'same-lst-sev-yrs'), ('date', 'september')], 'frog-eye-leaf-spot', 0.02857142857142857, 1.0)",frog-eye-leaf-spot,0,0,0,-
+75,"([('date', 'september'), ('plant-stand', 'normal')], 'alternarialeaf-spot', 0.03333333333333333, 1.0)",alternarialeaf-spot,0,0,0,-
+76,"([('date', 'september'), ('hail', 'no')], 'alternarialeaf-spot', 0.016666666666666666, 1.0)",alternarialeaf-spot,0,0,0,-
+77,"([('crop-hist', 'same-lst-yr')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,0,0,0,-
+78,"([('date', 'september')], 'alternarialeaf-spot', 0.016666666666666666, 1.0)",alternarialeaf-spot,1,1,0,1.0
+79,"([('hail', 'no'), ('date', 'may')], 'brown-spot', 0.015625, 1.0)",brown-spot,0,0,0,-
+80,"([('date', 'may')], 'phyllosticta-leaf-spot', 0.08333333333333333, 1.0)",phyllosticta-leaf-spot,0,0,0,-
+81,"([('hail', 'no')], 'frog-eye-leaf-spot', 0.02857142857142857, 1.0)",frog-eye-leaf-spot,1,1,0,1.0
+82,"([('temp', 'gt-norm')], 'alternarialeaf-spot', 0.016666666666666666, 1.0)",alternarialeaf-spot,1,0,1,0.0
+83,"([('area-damaged', 'upper-areas'), ('date', 'july')], 'phyllosticta-leaf-spot', 0.08333333333333333, 1.0)",phyllosticta-leaf-spot,0,0,0,-
+84,"([('area-damaged', 'upper-areas')], 'alternarialeaf-spot', 0.05, 1.0)",alternarialeaf-spot,0,0,0,-
+85,"([('date', 'august'), ('plant-stand', 'normal')], 'frog-eye-leaf-spot', 0.05714285714285714, 1.0)",frog-eye-leaf-spot,1,0,1,0.0
+86,"([('precip', 'norm')], 'phyllosticta-leaf-spot', 0.08333333333333333, 1.0)",phyllosticta-leaf-spot,0,0,0,-
+87,"([('crop-hist', 'same-lst-two-yrs')], 'brown-spot', 0.015625, 1.0)",brown-spot,1,0,1,0.0
+88,"([('plant-stand', 'normal')], 'alternarialeaf-spot', 0.03333333333333333, 1.0)",alternarialeaf-spot,0,0,0,-
+89,"([('date', 'july')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,0,0,0,-
+90,"([('area-damaged', 'low-areas')], 'alternarialeaf-spot', 0.016666666666666666, 1.0)",alternarialeaf-spot,1,0,1,0.0
+91,"([('seed-tmt', 'fungicide')], 'alternarialeaf-spot', 0.016666666666666666, 1.0)",alternarialeaf-spot,0,0,0,-
+92,"([('date', 'august')], 'frog-eye-leaf-spot', 0.014285714285714285, 1.0)",frog-eye-leaf-spot,1,0,1,0.0
+93,"(None, 'frog-eye-leaf-spot', 1.0, 0.178117048346056)",frog-eye-leaf-spot,1,0,1,0.0
